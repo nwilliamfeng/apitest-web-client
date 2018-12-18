@@ -17,7 +17,7 @@ function loadPostList(code,sort=-1,page=1,pageSize=20){
     return async dispatch=>{
        
         const articleNewListData =await commentApi.getArticleNewList(code,sort,page,pageSize);
-        dispatch({type:commentConstants.LOAD_ARTICLE_NEW_LIST,articleNewListData});
+        dispatch({type:commentConstants.LOAD_ARTICLE_NEW_LIST,articleNewListData,pageIdx:page});
     }
 }
 

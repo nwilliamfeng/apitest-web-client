@@ -1,10 +1,37 @@
+import React, { Component } from 'react'
 
+export class Input extends Component {
 
-export const Input=({onSubmit,inputStyle={},placeholder=''})=>{
-    let input=null;
-    const keyHandle=e=>{
-        e.preventDefault();
-        onSubmit(input.value);
+    constructor(props){
+        super(props);
+        this.state={value:props.value};
+        
     }
-    return <input ref={el=>input=el} onKeyPress={keyHandle} style={inputStyle} placeholder={placeholder}/>
+    
+    keyHandle = e => {
+        if (e.nativeEvent.keyCode === 13) {
+            const { onSubmit } = this.props;
+            e.preventDefault();
+            if (onSubmit != null) {
+                onSubmit(this.input.value);
+            }
+        }
+    }
+
+    componentWillReceiveProps(nextProps,nextContext){
+        if(nextProps!=null){
+            if(this.state.value!==nextProps.value){
+                this.setState({value:nextProps.value})
+            }
+        }
+    }
+
+    handleChange(e){
+        this.setState({value: e.target.value });
+    }
+
+    render() {
+        const {  inputStyle, placeholder } = this.props;
+        return <input ref={el => this.input = el} value={this.state.value}  onChange={this.handleChange} onKeyPress={this.keyHandle} style={inputStyle} placeholder={placeholder} />
+    }
 }

@@ -8,6 +8,7 @@ import { ColumnFlexDiv, ClickImg, ButtonDiv, Span } from './parts'
 import { User, withStickTag, withAuthorTag, withUserInfo, withColonTag } from './user'
 import { take } from 'lodash'
 import { compose } from 'recompose';
+import {Input} from '../controls'
 
 const likeImgSrc = require('../assets/imgs/like.png')
 
@@ -297,8 +298,36 @@ export const Comment = props => {
 export const PageNavigator = ({ pageCount, onPreviousClick, onNextClick }) => {
     return <ColumnFlexDiv style={{ justifyContent: 'center', width: '100%', alignItems: 'center', padding: 10, background: '#F5F5F5' }}>
         {`共 ${pageCount} 页`}
-        
+   
         <div onClick={onPreviousClick} style={{ color: '#4169E1', cursor: 'pointer' }}>{'上一页'}</div>
         <div onClick={onNextClick} style={{ marginLeft: 10, color: '#4169E1', cursor: 'pointer' }}>{'下一页'}</div>
+    </ColumnFlexDiv>
+}
+
+
+export const PageNavigator2 = ({pageIdx=0, pageCount=0, onNavigate  }) => {
+   
+    const handleNavigate=idx=>{
+        if(onNavigate!=null){
+            onNavigate(idx);
+        }
+    }
+    const handlePreviousClick=()=>{
+        if(pageIdx>1){
+            handleNavigate(pageIdx-1);
+        }
+    }
+    const handleNextClick=()=>{
+        if(pageIdx<pageCount){
+            handleNavigate(pageIdx+1);
+        }
+       
+    }
+  
+    return <ColumnFlexDiv style={{ justifyContent: 'center', width: '100%', alignItems: 'center', padding: 10, background: '#F5F5F5' }}>
+        {`共 ${pageCount} 页`}
+        <Input inputStyle={{width:80}} onNavigate={onNavigate} onSubmit={handleNavigate} value={pageIdx}/>
+        <div onClick={handlePreviousClick} style={{ color: '#4169E1', cursor: 'pointer' }}>{'上一页'}</div>
+        <div onClick={handleNextClick} style={{ marginLeft: 10, color: '#4169E1', cursor: 'pointer' }}>{'下一页'}</div>
     </ColumnFlexDiv>
 }

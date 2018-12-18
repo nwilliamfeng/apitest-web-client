@@ -14,6 +14,7 @@ const defaultState = {
     postId:null,
     replyId:null,
     articleNewListData:{rc:1,count:0,me:''},
+    articleNewListPageIdx:0,
 }
 
 export const commentReducer = (state = defaultState, action) => {
@@ -48,6 +49,7 @@ export const commentReducer = (state = defaultState, action) => {
         return{
             ...state,
             articleNewListData:action.articleNewListData,
+            articleNewListPageIdx:action.pageIdx,
         }
 
         default:
