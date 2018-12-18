@@ -38,6 +38,7 @@ export const ButtonDiv = styled.div`
     &:active{
         background:	#F5F5F5;
     }
+    width :${props=>props.width?props.width:'auto'};
 `
 
 export const PostIdInput=styled.input`

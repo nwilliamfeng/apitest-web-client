@@ -4,7 +4,7 @@ import { commentActions } from '../actions'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
 import { Colors } from './Colors'
-import { ColumnFlexDiv, ClickImg, ButtonDiv,Span } from './parts'
+import { ColumnFlexDiv, ClickImg, ButtonDiv, Span } from './parts'
 import { User, withStickTag, withAuthorTag, withUserInfo, withColonTag } from './user'
 import { take } from 'lodash'
 import { compose } from 'recompose';
@@ -77,11 +77,11 @@ const FooterDiv = styled(ColumnFlexDiv)`
 
 const CommentUser = compose(withUserInfo, withStickTag, withAuthorTag)(props => <User {...props} />)
 
-const ReplyUser= compose(withColonTag, withAuthorTag)(props => <User {...props} />)
+const ReplyUser = compose(withColonTag, withAuthorTag)(props => <User {...props} />)
 
-const renderReplyUser=({ reply_user, reply_is_author,  }) => {
+const renderReplyUser = ({ reply_user, reply_is_author, }) => {
     const { user_nickname } = reply_user;
-    return <ReplyUser nickName={user_nickname} fontSize={'14px'} isAuthor={reply_is_author}/>
+    return <ReplyUser nickName={user_nickname} fontSize={'14px'} isAuthor={reply_is_author} />
 }
 
 const renderCommentUser = ({ reply_user, reply_is_author, reply_is_top }) => {
@@ -113,16 +113,16 @@ export class ChildReply extends Component {
         return <div>
             {needContentExpand === true && <ExpandContentDiv>
                 <span>
-                {renderReplyUser({reply_user,reply_is_author})}
-                {`${reply_text}`}
+                    {renderReplyUser({ reply_user, reply_is_author })}
+                    {`${reply_text}`}
                 </span>
-               
+
                 {/* <span style={{ color: Colors.LINK_COLOR }}>{reply_user.user_nickname}</span>{reply_is_author === true && <span style={{ background: '#4169E1', padding: '1px 3px', color: 'white', fontSize: 10, marginLeft: 5 }}>{'作者'}</span>}{`：  ${reply_text}`} */}
             </ExpandContentDiv>}
             {needContentExpand === false && <ContentDiv>
                 <Span >
-                {renderReplyUser({reply_user,reply_is_author})}
-                {`${reply_text}`}
+                    {renderReplyUser({ reply_user, reply_is_author })}
+                    {`${reply_text}`}
                 </Span>
                 {/* <span style={{ color: Colors.LINK_COLOR }}>{reply_user.user_nickname}</span>{reply_is_author === true && <span style={{ background: '#4169E1', padding: '1px 3px', color: 'white', fontSize: 10, marginLeft: 5 }}>{'作者'}</span>}{`：  ${reply_text}`} */}
             </ContentDiv>}
@@ -161,6 +161,38 @@ const ShowMoreTextDiv = styled(ColumnFlexDiv)`
   
 `
 
+const UnfollowDiv = styled.div`
+    border:1px solid #039; 
+    cursor:pointer;
+    opacity:0.8;
+    &:hover{
+        opacity:1;
+    }
+    color:#039;
+    font-size:8px;
+    padding:1px 3px;
+    width:45px; 
+    border-radius:3px;
+    max-height:22px;
+`
+const FollowDiv = styled.div`
+    background:#039;
+    color:white;
+    cursor:pointer;
+    padding:2px 3px;
+    opacity:0.8;
+    font-size:10px;
+    white-space:nowrap;
+    &:hover{
+        opacity:1;
+    }
+    border-radius:3px;
+    max-height:22px;
+    width:52px;
+   
+`
+
+
 export class Reply extends Component {
 
     constructor(props) {
@@ -179,7 +211,7 @@ export class Reply extends Component {
     }
 
     render() {
-        const { user_id, reply_is_top, reply_id, reply_is_author, reply_like_count, reply_text, reply_user, reply_time, reply_picture, child_replys, reply_count, source_reply, dispatch, replyPageSize, postId } = this.props;
+        const { user_id, reply_is_top, reply_id, reply_is_author, reply_is_follow, reply_like_count, reply_text, reply_user, reply_time, reply_picture, child_replys, reply_count, source_reply, dispatch, replyPageSize, postId } = this.props;
         const showMoreContent = reply_text.length > 96;
         const { needContentExpand } = this.state;
 
@@ -188,11 +220,11 @@ export class Reply extends Component {
             <ContainerDiv >
                 <ColumnFlexDiv>
                     <UserInfoDiv>
-
                         {renderCommentUser({ reply_user, reply_is_author, reply_is_top })}
                     </UserInfoDiv>
+
                     <LikeDiv>
-                        <ClickImg src={likeImgSrc} />
+                        <ClickImg src={likeImgSrc}/>
                         {reply_like_count}
                     </LikeDiv>
                 </ColumnFlexDiv>
@@ -229,19 +261,18 @@ export class Reply extends Component {
 
 
 export const Comment = props => {
-    const { user_id, reply_is_author, reply_like_count, reply_text, reply_user, reply_time, reply_picture, reply_is_top } = props;
-
+    const { user_id, reply_is_author, reply_is_follow, reply_like_count, reply_text, reply_user, reply_time, reply_picture, reply_is_top } = props;
+    
     return <ReplyDiv>
         <UserAvataImg alt='' src={`https://avator.eastmoney.com/qface/${user_id}/120`} />
         <ContainerDiv >
-            <ColumnFlexDiv>
+            <ColumnFlexDiv style={{ alignItems: 'center' }}>
                 <UserInfoDiv>
                     {renderCommentUser({ reply_user, reply_is_author, reply_is_top })}
                 </UserInfoDiv>
-                <LikeDiv>
-                    <ClickImg src={likeImgSrc} />
-                    {reply_like_count}
-                </LikeDiv>
+
+                {reply_is_follow === true && <FollowDiv>{'已关注'}</FollowDiv>}
+                {reply_is_follow === false && <UnfollowDiv >{'关注'}</UnfollowDiv>}
             </ColumnFlexDiv>
             <ContentDiv>
                 {reply_text}
@@ -249,6 +280,10 @@ export const Comment = props => {
             <img alt='' src={reply_picture} style={{ maxWidth: '100%', maxHeight: 200 }} />
             <FooterDiv>
                 {reply_time}
+                <LikeDiv>
+                    <ClickImg src={likeImgSrc} />
+                    {reply_like_count}
+                </LikeDiv>
                 <ReplyButton>{'回复'}</ReplyButton>
 
             </FooterDiv>
@@ -259,9 +294,10 @@ export const Comment = props => {
     </ReplyDiv>
 }
 
-export const PageNavigator = ({pageCount, onPreviousClick, onNextClick }) => {
+export const PageNavigator = ({ pageCount, onPreviousClick, onNextClick }) => {
     return <ColumnFlexDiv style={{ justifyContent: 'center', width: '100%', alignItems: 'center', padding: 10, background: '#F5F5F5' }}>
         {`共 ${pageCount} 页`}
+        
         <div onClick={onPreviousClick} style={{ color: '#4169E1', cursor: 'pointer' }}>{'上一页'}</div>
         <div onClick={onNextClick} style={{ marginLeft: 10, color: '#4169E1', cursor: 'pointer' }}>{'下一页'}</div>
     </ColumnFlexDiv>

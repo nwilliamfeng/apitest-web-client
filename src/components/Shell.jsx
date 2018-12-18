@@ -78,25 +78,7 @@ class Shell extends Component {
     render() {
         return <ShellDiv>
             <Background img={BackgroundImg} />
-            {/* <Container>      
-                <MenuBarDiv>
-                    <Menubar />
-                </MenuBarDiv>
-
-                <Toolbar />
-                <VerticalSplit size={240} minSize={240} maxSize={290}>
-                <OutListDiv>
-                <ListContainer>
-                        <ConnectionList />
-                    </ListContainer>
-                </OutListDiv>
-                   
-
-                    <TabDiv>
-                        <TabPaneList />
-                    </TabDiv>
-                </VerticalSplit>
-            </Container> */}
+       
             <CommentOutContainer>
                 <CommentContainer>
                     <Home />

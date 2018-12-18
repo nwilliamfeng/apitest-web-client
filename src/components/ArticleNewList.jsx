@@ -135,17 +135,19 @@ class ArticleNewList extends Component {
         this.props.dispatch(commentActions.loadPostList(code, nwSortType, pageIdx, pageSize));
     }
 
-    renderListItem = item => {
+    renderListItem = (item,idx) => {
 
-        const { post_comment_count, post_click_count, post_content, post_id, post_last_time, post_publish_time, post_title, post_user } = item;
+        const { post_comment_count, post_click_count,post_like_count, post_content, post_id, post_last_time, post_publish_time, post_title, post_user } = item;
         const { user_nickname, user_v } = post_user;
         
         return <Tr key={post_id}>
-            <Td width={'100px'} fontSize={'12px'} >{post_click_count}</Td>
-            <Td width={'100px'} fontSize={'12px'} >{post_comment_count}</Td>
+            <Td width={'60px'} fontSize={'12px'} >{idx}</Td>
+            <Td width={'80px'} fontSize={'12px'} >{post_click_count}</Td>
+            <Td width={'80px'} fontSize={'12px'} >{post_comment_count}</Td>
+            <Td width={'80px'} fontSize={'12px'} >{post_like_count}</Td>
             <Td width={'300px'} title={post_title}><a href=''>{post_title}</a></Td>
-            <Td width={'100px'}> <PostUser nickName={user_nickname} isVUser={user_v>0}/> </Td>
-            <Td width={'120px'}>{this.dateFormat('MM-dd', post_publish_time)}</Td>
+            <Td width={'140px'}> <PostUser nickName={user_nickname} isVUser={user_v>0}/> </Td>
+            <Td width={'120px'}>{this.dateFormat('MM-dd hh:mm', post_publish_time)}</Td>
             <Td width={'140px'}>{this.dateFormat('MM-dd hh:mm', post_last_time)}</Td>
         </Tr>
     }
@@ -159,8 +161,10 @@ class ArticleNewList extends Component {
             <Table >
                 <thead>
                     <tr>
+                        <th>序号</th>
                         <th>阅读</th>
                         <th>评论</th>
+                        <th>点赞数</th>
                         <th style={{textAlign:'center'}}>标题</th>
                         <th>作者</th>
                         <th>发表日期</th>
@@ -170,7 +174,7 @@ class ArticleNewList extends Component {
 
                 <tbody>
                     {
-                        re.map(x => this.renderListItem(x))
+                        re.map((x,idx) => this.renderListItem(x,idx+1))
                     }
 
                 </tbody>
@@ -211,7 +215,7 @@ class ArticleNewList extends Component {
         const { rc, me, re, count } = articleNewListData;
         return <Div>
             <ListHeaderDiv>
-                <div style={{ fontWeight: 'bold' }}> {`贴子${count}`}</div>
+                <div style={{ fontWeight: 'bold' }}> {`贴子数 ${count}`}</div>
                 <PostIdInput ref={el => this.codeInput = el} onKeyPress={this.inputKeyPress} placeholder="请输入code"></PostIdInput>
                 {/* <div onClick={this.sortList} style={{ color: '#4169E1', cursor: 'pointer' }}>{this.state.sort === -1 ? '排序-倒序' : '排序-正序'}</div> */}
                 <div/>

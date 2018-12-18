@@ -14,8 +14,9 @@ const ContainerDiv = styled.div`
     height:100%;
     flex-direction:column;
     justify-content:center;
- 
-   
+    width:100%;
+     
+    align-items:center;
 `
 
 class Home extends Component {
@@ -23,7 +24,7 @@ class Home extends Component {
     componentDidMount() {
       
         console.log('ct:' + cookieUtil.getCookieValue('ct'))
-      
+        
     }
 
     handleReplyClick=()=>{
@@ -42,11 +43,11 @@ class Home extends Component {
             return <React.Fragment />
         }
         return <ContainerDiv>
-            <div>
+            <ContainerDiv style={{width:160}}>
                 <h3>{'股吧服务测试'}</h3>
-                <ButtonDiv onClick={this.handleReplyClick}>{'评论测试'}</ButtonDiv>
-                <ButtonDiv onClick={this.handlePostListClick}>{'贴子列表测试'}</ButtonDiv>
-            </div>
+                <ButtonDiv width={'72px'} onClick={this.handleReplyClick}>{'评论测试'}</ButtonDiv>
+                <ButtonDiv width={'96px'} onClick={this.handlePostListClick}>{'贴子列表测试'}</ButtonDiv>
+            </ContainerDiv>
 
         </ContainerDiv>
     }
