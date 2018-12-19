@@ -67,7 +67,7 @@ class ReplyList extends Component {
     constructor(props) {
         console.log('create replyList');
         super(props);
-        this.state={pageCount:0,pageSize:10,sort:-1};
+        this.state={pageCount:0,sort:-1};
     }
 
     
@@ -89,10 +89,11 @@ class ReplyList extends Component {
 
     
 
-    handleNavigatePage = pageIdx => {
+    handleNavigatePage = (pageIdx,size) => {
         const {     sort } = this.state; 
-        const {postId,replyId,replyPageSize } =this.props;    
-        this.props.dispatch(commentActions.loadReplyList(postId,replyId, sort, pageIdx, replyPageSize));
+        const {postId,replyId } =this.props;  
+         
+        this.props.dispatch(commentActions.loadReplyList(postId,replyId, sort, pageIdx, size));
     }
 
     sortComments = () => {
@@ -123,7 +124,7 @@ class ReplyList extends Component {
                 {child_replys && child_replys.map(x => <Reply key={x.reply_id} {...x} />)}
             </ReplyListContainer>
             {/* <PageNavigator pageCount={this.state.pageCount} onPreviousClick={this.loadPreviousPage} onNextClick={this.loadNextPage}/> */}
-            <PageNavigator style={{width:200}} pageIdx={this.props.replyPage} pageCount={this.state.pageCount} onNavigate={this.handleNavigatePage}/>
+            <PageNavigator style={{width:200}}  pageSize={this.props.replyPageSize}  pageIdx={this.props.replyPage} pageCount={this.state.pageCount} onNavigate={this.handleNavigatePage}/>
         </React.Fragment>
     }
 

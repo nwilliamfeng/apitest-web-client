@@ -1,18 +1,11 @@
 import React, { Component } from 'react'
-
 import { commentActions } from '../actions'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
-import { ColumnFlexDiv, ClickImg, Img, PostIdInput } from './parts'
-
-import { isEqual } from 'lodash'
-import { Reply, Comment } from './Reply'
-import { withScroll,PageNavigator } from '../controls'
+import {  PostIdInput } from './parts'
+import { withScroll, PageNavigator } from '../controls'
 import { Pages } from '../constants';
-import {User,WithVTag} from './user'
-
-
-
+import { User, WithVTag } from './user'
 
 const InfoDiv = styled.div`
     display:flex;
@@ -21,7 +14,6 @@ const InfoDiv = styled.div`
     height:100%;
      font-size:20px;
      color: gray;
-
 `
 
 const Div = styled.div`
@@ -41,11 +33,9 @@ const ListHeaderDiv = styled.div`
 `
 
 const Tr = styled.tr`
-&:nth-child(even){
-
-background:	#FFFFE0;
-
-}
+    &:nth-child(even){
+        background:	#FFFFE0;
+    }
 `
 
 const Table = styled.table`
@@ -58,7 +48,6 @@ const Td = styled.td`
     overflow:hidden;
     white-space:nowrap;
     text-overflow:ellipsis;
-     
     font-size:${props => props.fontSize ? props.fontSize : '14px'};
     width:${props => props.width ? props.width : 'auto'};
     max-width:${props => props.width ? props.width : 'auto'};
@@ -66,25 +55,22 @@ const Td = styled.td`
 
 const ListContainer = withScroll(props => <div {...props} style={{ width: '100%' }} />)
 
-const PostUser=WithVTag(props=><User {...props}/>)
+const PostUser = WithVTag(props => <User {...props} />)
 
 class ArticleNewList extends Component {
 
     constructor(props) {
         console.log('create postList');
         super(props);
-        this.state = { sort: -1,  pageCount: 0, pageSize:100, code: null, };
+        this.state = { sort: -1, pageCount: 0, pageSize: 20, code: null, };
     }
 
-
     componentWillReceiveProps(nextProps, nextContext) {
-
-        const { pageCount,  pageSize } = this.state;
-        if (nextProps != null && pageCount === 0) {
+        const {  pageSize } = this.state;
+        if (nextProps != null) {
             const { articleNewListData } = nextProps;
             this.setState({ pageCount: Math.ceil(articleNewListData.count / pageSize) });
         }
-
     }
 
     dateFormat = (fmt, dateStr) => {
@@ -106,31 +92,34 @@ class ArticleNewList extends Component {
         return fmt;
     }
 
-    handleNavigatePage = pageIdx => {
-        const {   pageSize, code, sort } = this.state;     
-        this.props.dispatch(commentActions.loadPostList(code, sort, pageIdx, pageSize));
+    handleNavigatePage = (pageIdx,size) => {
+        const { pageSize, code, sort } = this.state;
+        if(size!=null && pageSize!==size){
+            this.setState({pageSize:size});
+        }
+        this.props.dispatch(commentActions.loadPostList(code, sort, pageIdx, size));
     }
 
     sortList = () => {
-        const {  code, pageSize, sort } = this.state;
-        const {articleNewListPageIdx} =this.props;
+        const { code, pageSize, sort } = this.state;
+        const { articleNewListPageIdx } = this.props;
         const nwSortType = sort === -1 ? 1 : -1;
         this.setState({ sort: nwSortType });
         this.props.dispatch(commentActions.loadPostList(code, nwSortType, articleNewListPageIdx, pageSize));
     }
 
-    renderListItem = (item,idx) => {
+    renderListItem = (item, idx) => {
 
-        const { post_comment_count, post_click_count,post_like_count, post_content, post_id, post_last_time, post_publish_time, post_title, post_user } = item;
+        const { post_comment_count, post_click_count, post_like_count, post_id, post_last_time, post_publish_time, post_title, post_user } = item;
         const { user_nickname, user_v } = post_user;
-        
+
         return <Tr key={post_id}>
             <Td width={'60px'} fontSize={'12px'} >{idx}</Td>
             <Td width={'80px'} fontSize={'12px'} >{post_click_count}</Td>
             <Td width={'80px'} fontSize={'12px'} >{post_comment_count}</Td>
             <Td width={'80px'} fontSize={'12px'} >{post_like_count}</Td>
             <Td width={'300px'} title={post_title}><a href='#'>{post_title}</a></Td>
-            <Td width={'140px'}> <PostUser nickName={user_nickname} isVUser={user_v>0}/> </Td>
+            <Td width={'140px'}> <PostUser nickName={user_nickname} isVUser={user_v > 0} /> </Td>
             <Td width={'120px'}>{this.dateFormat('MM-dd hh:mm', post_publish_time)}</Td>
             <Td width={'140px'}>{this.dateFormat('MM-dd hh:mm', post_last_time)}</Td>
         </Tr>
@@ -149,43 +138,30 @@ class ArticleNewList extends Component {
                         <th>阅读</th>
                         <th>评论</th>
                         <th>点赞数</th>
-                        <th style={{textAlign:'center'}}>标题</th>
+                        <th style={{ textAlign: 'center' }}>标题</th>
                         <th>作者</th>
                         <th>发表日期</th>
                         <th>最后更新日期</th>
                     </tr>
                 </thead>
-
-                <tbody>
-                    {
-                        re.map((x,idx) => this.renderListItem(x,idx+1))
-                    }
-
-                </tbody>
-
+                <tbody>{re.map((x, idx) => this.renderListItem(x, idx + 1))}</tbody>
             </Table>
         </ListContainer>
-
-
     }
 
     inputKeyPress = e => {
         if (e.nativeEvent.keyCode === 13) { //e.nativeEvent获取原生的事件对像
-
             const code = this.codeInput.value;
             this.setState({ pageCount: 0, pageIdx: 0, code });
             const { sort, pageSize } = this.state;
-            const {dispatch} =this.props;
+            const { dispatch } = this.props;
             dispatch(commentActions.loadPostList(code, sort, 1, pageSize));
         }
     }
 
-
-
     render() {
         console.log('render post list');
-        const { articleNewListData, page,articleNewListPageIdx } = this.props;
-      
+        const { articleNewListData, page, articleNewListPageIdx } = this.props;
         if (page !== Pages.POST) {
             return <React.Fragment />
         }
@@ -202,18 +178,18 @@ class ArticleNewList extends Component {
                 <div style={{ fontWeight: 'bold' }}> {`贴子数 ${count}`}</div>
                 <PostIdInput ref={el => this.codeInput = el} onKeyPress={this.inputKeyPress} placeholder="请输入code"></PostIdInput>
                 {/* <div onClick={this.sortList} style={{ color: '#4169E1', cursor: 'pointer' }}>{this.state.sort === -1 ? '排序-倒序' : '排序-正序'}</div> */}
-                <div/>
+                <div />
             </ListHeaderDiv>
             {rc === 0 && <InfoDiv> {`加载贴子列表失败：${me}`} </InfoDiv>}
             {rc === 1 && this.renderList({ re })}
-            {count > 0 && <PageNavigator style={{width:200}} pageIdx={articleNewListPageIdx} pageCount={this.state.pageCount} onNavigate={this.handleNavigatePage}/>}
+            {count > 0 && <PageNavigator style={{ width: 200 }} pageSize={this.state.pageSize} pageIdx={articleNewListPageIdx} pageCount={this.state.pageCount} onNavigate={this.handleNavigatePage} />}
         </Div>
     }
 }
 
 function mapStateToProps(state) {
-    const { page, articleNewListData,articleNewListPageIdx } = state.comment;
-    return { page, articleNewListData,articleNewListPageIdx };
+    const { page, articleNewListData, articleNewListPageIdx } = state.comment;
+    return { page, articleNewListData, articleNewListPageIdx };
 }
 
 

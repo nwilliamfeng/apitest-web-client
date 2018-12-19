@@ -114,7 +114,7 @@ class CommentList extends Component {
                 {comments && comments.map(x => <Reply key={x.reply_id} {...x} replyPageSize={replyPageSize} postId={postId} dispatch={dispatch}/>)}
             </ReplyListContainer>}
             {rc === 0 && <InfoDiv> {`加载评论消息失败：${me}`} </InfoDiv>}
-            {count > 0 && <PageNavigator style={{width:200}} pageIdx={commentPage} pageCount={this.state.pageCount} onNavigate={this.handleNavigatePage}/>}
+            {count > 0 && <PageNavigator style={{width:200}} pageIdx={commentPage} pageSize={this.state.pageSize} pageCount={this.state.pageCount} onNavigate={this.handleNavigatePage}/>}
         </Div>
     }
 }

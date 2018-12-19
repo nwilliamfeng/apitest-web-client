@@ -2,6 +2,14 @@ import React from 'react'
 import styled from 'styled-components'
 import { Input } from './Input'
 
+const Select=styled.select`
+    outline:none;
+    border:none;
+    width:72px;  
+    text-align-last:right;
+    padding:3px 2px;
+  
+`
 
 const ColumnFlexDiv = styled.div`
     display:flex;
@@ -31,16 +39,17 @@ const ContainerDiv = styled(ColumnFlexDiv)`
     background: '#F5F5F5';
     font-size: 12px;
     justify-content:center;
+  
 `
 
 const InputDiv = styled(ColumnFlexDiv)`
     background:  white;
     align-items:center;
     width: 70px;
-
+    
 `
 
-export const PageNavigator = ({ pageIdx = 0, pageCount = 0, onNavigate }) => {
+export const PageNavigator = ({ pageIdx = 0, pageCount = 0,pageSize=0, onNavigate }) => {
 
     let pageSizeSelect;
 
@@ -71,7 +80,7 @@ export const PageNavigator = ({ pageIdx = 0, pageCount = 0, onNavigate }) => {
   
 
     const handleSelect=e=>{
-        handleNavigate(pageIdx,pageSizeSelect.value);
+        handleNavigate(1,pageSizeSelect.value);
     }
 
     
@@ -81,13 +90,13 @@ export const PageNavigator = ({ pageIdx = 0, pageCount = 0, onNavigate }) => {
             <Input inputStyle={style} onNavigate={onNavigate} onSubmit={handleNavigate} value={pageIdx} />
             {`/ ${pageCount} 页`}
         </InputDiv>
-        <select onChange={handleSelect} ref={el=>pageSizeSelect=el}>
-            <option value="5">5</option>
-            <option value="10">10</option>
-            <option value="20">20</option>
-            <option value="50">50</option>
-            <option value="100">100</option>
-        </select>
+        <Select onChange={handleSelect} ref={el=>pageSizeSelect=el} value={pageSize}>
+            <option value="5">5条/页</option>
+            <option value="10">10条/页</option>
+            <option value="20">20条/页</option>
+            <option value="50">50条/页</option>
+            <option value="100">100条/页</option>
+        </Select>
         <Button disabled={pageIdx <= 1} onClick={handlePreviousClick} >{'上一页'}</Button>
         <Button disabled={pageIdx >= pageCount} onClick={handleNextClick} >{'下一页'}</Button>
     </ContainerDiv>
