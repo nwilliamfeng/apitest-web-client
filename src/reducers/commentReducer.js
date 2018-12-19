@@ -4,9 +4,9 @@ const defaultState = {
     commentData: { rc:1, count:0, me:'' },
     replyData: null,
     page: Pages.HOME,
-    commentSortType:-1,
+    
     commentPage:1,
-    commentPageSize:10,
+     
     replySortType:-1,
     replyPage:1,
     replyPageSize:3,
@@ -32,10 +32,10 @@ export const commentReducer = (state = defaultState, action) => {
         case commentConstants.LOAD_COMMENTS:
             return {
                 ...state,
-                commentSortType:action.sortType,
+                 
                 commentData: action.commentData,
                 commentPage:action.page,
-                commentPageSize:action.pageSize,
+              
                 postId:action.postId,
             }
 

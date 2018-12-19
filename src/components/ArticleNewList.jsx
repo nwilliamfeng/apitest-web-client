@@ -6,8 +6,8 @@ import styled from 'styled-components'
 import { ColumnFlexDiv, ClickImg, Img, PostIdInput } from './parts'
 
 import { isEqual } from 'lodash'
-import { Reply, Comment, PageNavigator2 } from './Reply'
-import { withScroll } from '../controls'
+import { Reply, Comment } from './Reply'
+import { withScroll,PageNavigator } from '../controls'
 import { Pages } from '../constants';
 import {User,WithVTag} from './user'
 
@@ -73,7 +73,7 @@ class ArticleNewList extends Component {
     constructor(props) {
         console.log('create postList');
         super(props);
-        this.state = { sort: -1,  pageCount: 0, pageSize:20, code: null, };
+        this.state = { sort: -1,  pageCount: 0, pageSize:100, code: null, };
     }
 
 
@@ -106,33 +106,8 @@ class ArticleNewList extends Component {
         return fmt;
     }
 
-
-
-    // loadNextPage = () => {
-    //     const {  pageCount, pageSize, code, sort } = this.state;
-    //     const {articleNewListPageIdx} =this.props;
-    //     if (articleNewListPageIdx >= pageCount) {
-    //         alert('已经是最后一页了');
-    //         return;
-    //     }
-    //     this.setState({ pageIdx: articleNewListPageIdx + 1 });
-    //     this.props.dispatch(commentActions.loadPostList(code, sort, articleNewListPageIdx + 1, pageSize));
-    // }
-
-    // loadPreviousPage = () => {
-    //     const { pageIdx, pageCount, pageSize, code, sort } = this.state;
-    //     if (pageIdx === 1) {
-    //         alert('已经是第一页了');
-    //         return;
-    //     }
-    //     this.setState({ pageIdx: pageIdx - 1 });
-    //     this.props.dispatch(commentActions.loadPostList(code, sort, pageIdx - 1, pageSize));
-    // }
-
     handleNavigatePage = pageIdx => {
-     
-        const {   pageSize, code, sort } = this.state;
-       
+        const {   pageSize, code, sort } = this.state;     
         this.props.dispatch(commentActions.loadPostList(code, sort, pageIdx, pageSize));
     }
 
@@ -231,7 +206,7 @@ class ArticleNewList extends Component {
             </ListHeaderDiv>
             {rc === 0 && <InfoDiv> {`加载贴子列表失败：${me}`} </InfoDiv>}
             {rc === 1 && this.renderList({ re })}
-            {count > 0 && <PageNavigator2 style={{width:200}} pageIdx={articleNewListPageIdx} pageCount={this.state.pageCount} onNavigate={this.handleNavigatePage}/>}
+            {count > 0 && <PageNavigator style={{width:200}} pageIdx={articleNewListPageIdx} pageCount={this.state.pageCount} onNavigate={this.handleNavigatePage}/>}
         </Div>
     }
 }

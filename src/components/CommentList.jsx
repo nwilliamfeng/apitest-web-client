@@ -3,12 +3,10 @@ import { commentActions } from '../actions'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
 import { ColumnFlexDiv, PostIdInput } from './parts'
-import { Reply, PageNavigator } from './Reply'
+import { Reply } from './Reply'
 import { ReplyList } from './ReplyList'
-import { withScroll } from '../controls'
-
+import { withScroll , PageNavigator} from '../controls'
 import { Pages } from '../constants';
-
 
 const InfoDiv = styled.div`
     display:flex;
@@ -33,7 +31,6 @@ const ReplyListDiv = styled.div`
     /* background:	#F5F5F5; */
 `
 
-
 const ReplyListContainer = withScroll(props => <ReplyListDiv {...props} />)
 
 const ListHeaderDiv = styled.div`
@@ -49,61 +46,55 @@ class CommentList extends Component {
     constructor(props) {
         console.log('create commentList');
         super(props);
-        this.state = { comments: [], pageCount: 0 };
+        this.state = { comments: [], pageCount: 0 ,sortType:-1,pageSize:20};
     }
-
-    // componentDidMount() {
-    //     const { dispatch, commentSortType, commentPage, commentPageSize } = this.props;
-    //     dispatch(commentActions.loadCommentList(commentSortType, commentPage, commentPageSize));
-    // }
-
 
     componentWillReceiveProps(nextProps, nextContext) {
 
-        if (nextProps != null) {
-            const { commentPageSize, commentData } = nextProps;
-            const pageCount = Math.ceil(commentData.count / commentPageSize);
+        const { pageSize } = this.state;
+        if (nextProps != null )   {
+            const {  commentData } = nextProps;
+            const pageCount = Math.ceil(commentData.count / pageSize);
 
             this.setState({ comments: nextProps.commentData.re, pageCount: pageCount });
         }
     }
 
     sortComments = () => {
-        const { commentSortType, commentPageSize, commentPage, postId } = this.props;
-        const nwSortType = commentSortType === -1 ? 1 : -1;
-        this.props.dispatch(commentActions.loadCommentList(postId, nwSortType, commentPage, commentPageSize));
+        const {   commentPage, postId } = this.props;
+        const {sortType,pageSize,}=this.state;
+        const nwSortType = sortType === -1 ? 1 : -1;
+        this.setState({sortType:nwSortType});
+        this.props.dispatch(commentActions.loadCommentList(postId, nwSortType, commentPage, pageSize));
     }
 
-    loadNextPage = () => {
-        const { commentSortType, commentPageSize, commentPage, postId } = this.props;
-        if (commentPage >= this.state.pageCount) {
-            alert('已经是最后一页了');
-            return;
+   
+    handleNavigatePage = (pageIdx,size) => {
+        const {   pageSize,  sortType } = this.state; 
+        if(size!=null && size!==pageSize){
+            this.setState({pageSize:size});
         }
-        this.props.dispatch(commentActions.loadCommentList(postId, commentSortType, commentPage + 1, commentPageSize));
+        const {postId} =this.props;    
+        this.props.dispatch(commentActions.loadCommentList(postId, sortType, pageIdx, size));
     }
 
-    loadPreviousPage = () => {
-        const { commentSortType, commentPageSize, commentPage, postId } = this.props;
-        if (commentPage === 1) {
-            alert('已经是第一页了');
-            return;
-        }
-        this.props.dispatch(commentActions.loadCommentList(postId, commentSortType, commentPage - 1, commentPageSize));
-    }
 
     inputKeyPress = e => {
         if (e.nativeEvent.keyCode === 13) { //e.nativeEvent获取原生的事件对像
             const postId = this.postIdInput.value;
-            const { commentSortType, commentPageSize, commentPage, dispatch } = this.props;
-            dispatch(commentActions.loadCommentList(postId, commentSortType, commentPage, commentPageSize));
+            this.setState({ pageCount: 0,  });
+            const {   dispatch } = this.props;
+            const {sortType,pageSize,} =this.state;
+
+            dispatch(commentActions.loadCommentList(postId, sortType, 1, pageSize));
+
         }
     }
 
-
     render() {
         console.log('render comment list');
-        const { page, commentData, commentSortType, replyPageSize, postId ,dispatch} = this.props;
+        const { page, commentData,  replyPageSize, postId ,dispatch,commentPage} = this.props;
+        const {sortType}=this.state;
         if(page===Pages.REPLY){
            return  <ReplyList />
         }
@@ -117,23 +108,21 @@ class CommentList extends Component {
             <ListHeaderDiv>
                 <div style={{ fontWeight: 'bold' }}> {`评论${count}`}</div>
                 <PostIdInput ref={el => this.postIdInput = el} onKeyPress={this.inputKeyPress} placeholder="请输入贴子id"></PostIdInput>
-                <div onClick={this.sortComments} style={{ color: '#4169E1', cursor: 'pointer' }}>{commentSortType === -1 ? '智能排序' : '时间排序'}</div>
+                <div onClick={this.sortComments} style={{ color: '#4169E1', cursor: 'pointer' }}>{sortType === -1 ? '智能排序' : '时间排序'}</div>
             </ListHeaderDiv>
             {rc === 1 && <ReplyListContainer>
                 {comments && comments.map(x => <Reply key={x.reply_id} {...x} replyPageSize={replyPageSize} postId={postId} dispatch={dispatch}/>)}
             </ReplyListContainer>}
             {rc === 0 && <InfoDiv> {`加载评论消息失败：${me}`} </InfoDiv>}
-            {count > 0 && <PageNavigator pageCount={this.state.pageCount} onPreviousClick={this.loadPreviousPage} onNextClick={this.loadNextPage} />}
-
+            {count > 0 && <PageNavigator style={{width:200}} pageIdx={commentPage} pageCount={this.state.pageCount} onNavigate={this.handleNavigatePage}/>}
         </Div>
     }
 }
 
 function mapStateToProps(state) {
-    const { commentData, page, commentPage, commentPageSize, replyPageSize, commentSortType, postId } = state.comment;
-    return { commentData, page, commentPage, commentPageSize, replyPageSize, commentSortType, postId };
+    const { commentData, page, commentPage,  replyPageSize,  postId } = state.comment;
+    return { commentData, page, commentPage,  replyPageSize,  postId };
 }
-
 
 const commentList = connect(mapStateToProps)(CommentList)
 

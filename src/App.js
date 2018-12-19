@@ -17,12 +17,16 @@ class App extends Component {
   
   render() {
    
-    return <BrowserRouter basename="/guba-test"> 
-      <div className="App">
+    // return <BrowserRouter basename="/guba-test"> 
+    //   <div className="App">
         
-        <Route exact path='/' component={Shell}/> 
+    //     <Route exact path='/' component={Shell}/> 
+    //   </div>
+    // </BrowserRouter>
+    return  <div className="App">
+         <Shell/> 
       </div>
-    </BrowserRouter>
+   
     
   }
 }

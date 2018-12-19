@@ -2,7 +2,7 @@
   "name": "apitest-web-client",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://gbapi-test.eastmoney.com/",
+  "proxy": "https://imcpftest.eastmoney.com:2020/",
   "dependencies": {
     "bootstrap": "^3.4.0",
     "lodash": "^4.17.11",

@@ -6,8 +6,8 @@ import styled from 'styled-components'
 import { ColumnFlexDiv, ClickImg, Img } from './parts'
 
 import { isEqual } from 'lodash'
-import { Reply, Comment,PageNavigator } from './Reply'
-import { withScroll } from '../controls'
+import { Reply, Comment} from './Reply'
+import { withScroll,PageNavigator  } from '../controls'
 import { Pages } from '../constants';
 
 const backIconSrc = require('../assets/imgs/back.png')
@@ -67,7 +67,7 @@ class ReplyList extends Component {
     constructor(props) {
         console.log('create replyList');
         super(props);
-        this.state={pageCount:0};
+        this.state={pageCount:0,pageSize:10,sort:-1};
     }
 
     
@@ -87,27 +87,19 @@ class ReplyList extends Component {
         dispatch(commentActions.directToPage(Pages.COMMENT));
     }
 
-    loadNextPage = () => {
-        const { replySortType, replyPageSize,postId,replyId, replyPage } = this.props;
-        if (replyPage >= this.state.pageCount) {
-            alert('已经是最后一页了');
-            return;
-        }
-        this.props.dispatch(commentActions.loadReplyList(postId,replyId,replySortType, replyPage + 1, replyPageSize));
-    }
+    
 
-    loadPreviousPage = () => {
-        const { replySortType, replyPageSize, replyPage,postId,replyId, } = this.props;
-        if (replyPage === 1) {
-            alert('已经是第一页了');
-            return;
-        }
-        this.props.dispatch(commentActions.loadReplyList(postId,replyId,replySortType, replyPage - 1, replyPageSize));
+    handleNavigatePage = pageIdx => {
+        const {     sort } = this.state; 
+        const {postId,replyId,replyPageSize } =this.props;    
+        this.props.dispatch(commentActions.loadReplyList(postId,replyId, sort, pageIdx, replyPageSize));
     }
 
     sortComments = () => {
-        const { replySortType, replyPageSize, replyPage,postId,replyId } = this.props;
-        const nwSortType = replySortType === -1 ? 1 : -1;
+        const {  replyPageSize, replyPage,postId,replyId } = this.props;
+        const {sort} =this.state;
+        const nwSortType = sort === -1 ? 1 : -1;
+        this.setState({sort:nwSortType});
         this.props.dispatch(commentActions.loadReplyList(postId,replyId,nwSortType, replyPage, replyPageSize));
     }
 
@@ -125,12 +117,13 @@ class ReplyList extends Component {
 
             <ListHeaderDiv>
                 <span>{ '全部回复'} <span style={{marginLeft:3,color:'#4169E1'}}>{`${reply_count}条`}</span></span>
-                <div onClick={this.sortComments} style={{ color: '#4169E1', cursor: 'pointer' }}>{this.props.replySortType === -1 ? '智能排序' : '时间排序'}</div>
+                <div onClick={this.sortComments} style={{ color: '#4169E1', cursor: 'pointer' }}>{this.state.sort === -1 ? '智能排序' : '时间排序'}</div>
             </ListHeaderDiv>
             <ReplyListContainer>
                 {child_replys && child_replys.map(x => <Reply key={x.reply_id} {...x} />)}
             </ReplyListContainer>
-            <PageNavigator pageCount={this.state.pageCount} onPreviousClick={this.loadPreviousPage} onNextClick={this.loadNextPage}/>
+            {/* <PageNavigator pageCount={this.state.pageCount} onPreviousClick={this.loadPreviousPage} onNextClick={this.loadNextPage}/> */}
+            <PageNavigator style={{width:200}} pageIdx={this.props.replyPage} pageCount={this.state.pageCount} onNavigate={this.handleNavigatePage}/>
         </React.Fragment>
     }
 
@@ -154,8 +147,8 @@ class ReplyList extends Component {
 }
 
 function mapStateToProps(state) {
-    const { replyData , replyPage, replyPageSize, replySortType ,postId,replyId} = state.comment;
-    return { replyData, replyPage, replyPageSize, replySortType,postId,replyId  };
+    const { replyData , replyPage, replyPageSize, postId,replyId} = state.comment;
+    return { replyData, replyPage, replyPageSize, postId,replyId};
 }
 
 
