@@ -9,7 +9,7 @@ const defaultState = {
      
     replySortType:-1,
     replyPage:1,
-    replyPageSize:3,
+    replyPageSize:5,
 
     postId:null,
     replyId:null,

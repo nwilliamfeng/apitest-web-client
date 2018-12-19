@@ -1,11 +1,8 @@
 import React, { Component } from 'react'
-
 import { commentActions } from '../actions'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
 import { ColumnFlexDiv, ClickImg, Img } from './parts'
-
-import { isEqual } from 'lodash'
 import { Reply, Comment} from './Reply'
 import { withScroll,PageNavigator  } from '../controls'
 import { Pages } from '../constants';
@@ -29,18 +26,14 @@ const Div = styled.div`
     padding:10px;
 `
  
-
 const HeaderDiv = styled(ColumnFlexDiv)`
-    margin:0px 0px 20px 0px;
-   
+    margin:0px 0px 20px 0px;  
 `
 
 const ReplyListDiv = styled.div`
     width:100%;
-    /* background:	#F5F5F5; */
-    
+    /* background:	#F5F5F5; */  
 `
-
 const ReplyListContainer = withScroll(props => <ReplyListDiv {...props} />)
 
 const HeaderTitleDiv = styled.div`
@@ -48,9 +41,7 @@ const HeaderTitleDiv = styled.div`
     font-size:16px;
     text-align:center;
     padding:4px 0px;
-    
     flex:0 1 100%;
-   
 `
 
 const ListHeaderDiv = styled.div`
@@ -67,18 +58,16 @@ class ReplyList extends Component {
     constructor(props) {
         console.log('create replyList');
         super(props);
-        this.state={pageCount:0,sort:-1};
+        this.state={pageCount:0,sort:-1,isLoading:false};
     }
 
     
     componentWillReceiveProps(nextProps, nextContext) {
-
         if (nextProps != null) {
             const { replyPageSize, replyData } = nextProps;
-            const pageCount = this.state.pageCount === 0 ? Math.ceil(replyData.re.reply_count / replyPageSize) : this.state.pageCount;
-            this.setState({  pageCount: pageCount });
+            const pageCount =  Math.ceil(replyData.re.reply_count / replyPageSize);
+            this.setState({  pageCount: pageCount,isLoading:false });
         }
-
     }
 
     handleBackClick = e => {
@@ -87,12 +76,10 @@ class ReplyList extends Component {
         dispatch(commentActions.directToPage(Pages.COMMENT));
     }
 
-    
-
     handleNavigatePage = (pageIdx,size) => {
         const {     sort } = this.state; 
         const {postId,replyId } =this.props;  
-         
+         this.setState({isLoading:true});
         this.props.dispatch(commentActions.loadReplyList(postId,replyId, sort, pageIdx, size));
     }
 
@@ -100,7 +87,7 @@ class ReplyList extends Component {
         const {  replyPageSize, replyPage,postId,replyId } = this.props;
         const {sort} =this.state;
         const nwSortType = sort === -1 ? 1 : -1;
-        this.setState({sort:nwSortType});
+        this.setState({sort:nwSortType,isLoading:true});
         this.props.dispatch(commentActions.loadReplyList(postId,replyId,nwSortType, replyPage, replyPageSize));
     }
 
@@ -122,8 +109,7 @@ class ReplyList extends Component {
             </ListHeaderDiv>
             <ReplyListContainer>
                 {child_replys && child_replys.map(x => <Reply key={x.reply_id} {...x} />)}
-            </ReplyListContainer>
-            {/* <PageNavigator pageCount={this.state.pageCount} onPreviousClick={this.loadPreviousPage} onNextClick={this.loadNextPage}/> */}
+            </ReplyListContainer> 
             <PageNavigator style={{width:200}}  pageSize={this.props.replyPageSize}  pageIdx={this.props.replyPage} pageCount={this.state.pageCount} onNavigate={this.handleNavigatePage}/>
         </React.Fragment>
     }
@@ -133,6 +119,7 @@ class ReplyList extends Component {
     render() {
         console.log('render reply list');
         const { replyData } = this.props;
+        const {isLoading} =this.state;
         if (replyData == null) {
             return <InfoDiv>
                 {'正在加载数据...'}
@@ -142,7 +129,8 @@ class ReplyList extends Component {
         const { rc, me, re } = replyData;
         return <Div>
             {rc === 0 && <InfoDiv> {`加载回复消息失败：${me}`} </InfoDiv>}
-            {rc === 1 && this.renderReplys({ re })}
+            {isLoading===false && rc === 1 && this.renderReplys({ re })}
+            {isLoading===true && <InfoDiv> {'正在加载中，请稍候...'} </InfoDiv>}
         </Div>
     }
 }

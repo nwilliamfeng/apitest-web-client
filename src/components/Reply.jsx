@@ -3,12 +3,10 @@ import React, { Component } from 'react'
 import { commentActions } from '../actions'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
-import { Colors } from './Colors'
 import { ColumnFlexDiv, ClickImg, ButtonDiv, Span } from './parts'
 import { User, withStickTag, withAuthorTag, withUserInfo, withColonTag } from './user'
 import { take } from 'lodash'
 import { compose } from 'recompose';
-import {Input} from '../controls'
 
 const likeImgSrc = require('../assets/imgs/like.png')
 
@@ -118,7 +116,6 @@ export class ChildReply extends Component {
                     {`${reply_text}`}
                 </span>
 
-                {/* <span style={{ color: Colors.LINK_COLOR }}>{reply_user.user_nickname}</span>{reply_is_author === true && <span style={{ background: '#4169E1', padding: '1px 3px', color: 'white', fontSize: 10, marginLeft: 5 }}>{'作者'}</span>}{`：  ${reply_text}`} */}
             </ExpandContentDiv>}
             {needContentExpand === false && <ContentDiv>
                 <Span >
@@ -225,7 +222,7 @@ export class Reply extends Component {
                     </UserInfoDiv>
 
                     <LikeDiv>
-                        <ClickImg src={likeImgSrc}/>
+                        <ClickImg src={likeImgSrc} />
                         {reply_like_count}
                     </LikeDiv>
                 </ColumnFlexDiv>
@@ -263,7 +260,7 @@ export class Reply extends Component {
 
 export const Comment = props => {
     const { user_id, reply_is_author, reply_is_follow, reply_like_count, reply_text, reply_user, reply_time, reply_picture, reply_is_top } = props;
-    
+
     return <ReplyDiv>
         <UserAvataImg alt='' src={`https://avator.eastmoney.com/qface/${user_id}/120`} />
         <ContainerDiv >

@@ -46,7 +46,7 @@ class CommentList extends Component {
     constructor(props) {
         console.log('create commentList');
         super(props);
-        this.state = { comments: [], pageCount: 0 ,sortType:-1,pageSize:20};
+        this.state = {isLoading:false, comments: [], pageCount: 0 ,sortType:-1,pageSize:20};
     }
 
     componentWillReceiveProps(nextProps, nextContext) {
@@ -56,7 +56,7 @@ class CommentList extends Component {
             const {  commentData } = nextProps;
             const pageCount = Math.ceil(commentData.count / pageSize);
 
-            this.setState({ comments: nextProps.commentData.re, pageCount: pageCount });
+            this.setState({ comments: nextProps.commentData.re, pageCount: pageCount,isLoading:false });
         }
     }
 
@@ -64,7 +64,7 @@ class CommentList extends Component {
         const {   commentPage, postId } = this.props;
         const {sortType,pageSize,}=this.state;
         const nwSortType = sortType === -1 ? 1 : -1;
-        this.setState({sortType:nwSortType});
+        this.setState({sortType:nwSortType,isLoading:true});
         this.props.dispatch(commentActions.loadCommentList(postId, nwSortType, commentPage, pageSize));
     }
 
@@ -72,7 +72,7 @@ class CommentList extends Component {
     handleNavigatePage = (pageIdx,size) => {
         const {   pageSize,  sortType } = this.state; 
         if(size!=null && size!==pageSize){
-            this.setState({pageSize:size});
+            this.setState({pageSize:size,isLoading:true});
         }
         const {postId} =this.props;    
         this.props.dispatch(commentActions.loadCommentList(postId, sortType, pageIdx, size));
@@ -82,7 +82,7 @@ class CommentList extends Component {
     inputKeyPress = e => {
         if (e.nativeEvent.keyCode === 13) { //e.nativeEvent获取原生的事件对像
             const postId = this.postIdInput.value;
-            this.setState({ pageCount: 0,  });
+            this.setState({ pageCount: 0,isLoading:true,  });
             const {   dispatch } = this.props;
             const {sortType,pageSize,} =this.state;
 
@@ -94,7 +94,7 @@ class CommentList extends Component {
     render() {
         console.log('render comment list');
         const { page, commentData,  replyPageSize, postId ,dispatch,commentPage} = this.props;
-        const {sortType}=this.state;
+        const {sortType,isLoading}=this.state;
         if(page===Pages.REPLY){
            return  <ReplyList />
         }
@@ -110,9 +110,10 @@ class CommentList extends Component {
                 <PostIdInput ref={el => this.postIdInput = el} onKeyPress={this.inputKeyPress} placeholder="请输入贴子id"></PostIdInput>
                 <div onClick={this.sortComments} style={{ color: '#4169E1', cursor: 'pointer' }}>{sortType === -1 ? '智能排序' : '时间排序'}</div>
             </ListHeaderDiv>
-            {rc === 1 && <ReplyListContainer>
+            {isLoading===false && rc === 1 && <ReplyListContainer>
                 {comments && comments.map(x => <Reply key={x.reply_id} {...x} replyPageSize={replyPageSize} postId={postId} dispatch={dispatch}/>)}
             </ReplyListContainer>}
+            {isLoading===true && <InfoDiv> {'正在加载中，请稍候...'} </InfoDiv>}
             {rc === 0 && <InfoDiv> {`加载评论消息失败：${me}`} </InfoDiv>}
             {count > 0 && <PageNavigator style={{width:200}} pageIdx={commentPage} pageSize={this.state.pageSize} pageCount={this.state.pageCount} onNavigate={this.handleNavigatePage}/>}
         </Div>

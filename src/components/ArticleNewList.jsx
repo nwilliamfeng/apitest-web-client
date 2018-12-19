@@ -6,6 +6,7 @@ import {  PostIdInput } from './parts'
 import { withScroll, PageNavigator } from '../controls'
 import { Pages } from '../constants';
 import { User, WithVTag } from './user'
+import {dateUtil} from '../utils'
 
 const InfoDiv = styled.div`
     display:flex;
@@ -62,40 +63,23 @@ class ArticleNewList extends Component {
     constructor(props) {
         console.log('create postList');
         super(props);
-        this.state = { sort: -1, pageCount: 0, pageSize: 20, code: null, };
+        this.state = { sort: -1, pageCount: 0, pageSize: 20, code: null,isLoading:false };
     }
 
     componentWillReceiveProps(nextProps, nextContext) {
         const {  pageSize } = this.state;
         if (nextProps != null) {
             const { articleNewListData } = nextProps;
-            this.setState({ pageCount: Math.ceil(articleNewListData.count / pageSize) });
+            this.setState({ pageCount: Math.ceil(articleNewListData.count / pageSize),isLoading:false });
         }
     }
 
-    dateFormat = (fmt, dateStr) => {
-        const date = new Date(dateStr)
-        let o = {
-            "M+": date.getMonth() + 1,                 //月份   
-            "d+": date.getDate(),                    //日   
-            "h+": date.getHours(),                   //小时   
-            "m+": date.getMinutes(),                 //分   
-            "s+": date.getSeconds(),                 //秒   
-            "q+": Math.floor((date.getMonth() + 3) / 3), //季度   
-            "S": date.getMilliseconds()             //毫秒   
-        };
-        if (/(y+)/.test(fmt))
-            fmt = fmt.replace(RegExp.$1, (date.getFullYear() + "").substr(4 - RegExp.$1.length));
-        for (var k in o)
-            if (new RegExp("(" + k + ")").test(fmt))
-                fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
-        return fmt;
-    }
+   
 
     handleNavigatePage = (pageIdx,size) => {
         const { pageSize, code, sort } = this.state;
         if(size!=null && pageSize!==size){
-            this.setState({pageSize:size});
+            this.setState({pageSize:size,isLoading:true});
         }
         this.props.dispatch(commentActions.loadPostList(code, sort, pageIdx, size));
     }
@@ -104,7 +88,7 @@ class ArticleNewList extends Component {
         const { code, pageSize, sort } = this.state;
         const { articleNewListPageIdx } = this.props;
         const nwSortType = sort === -1 ? 1 : -1;
-        this.setState({ sort: nwSortType });
+        this.setState({ sort: nwSortType,isLoading:true });
         this.props.dispatch(commentActions.loadPostList(code, nwSortType, articleNewListPageIdx, pageSize));
     }
 
@@ -120,8 +104,8 @@ class ArticleNewList extends Component {
             <Td width={'80px'} fontSize={'12px'} >{post_like_count}</Td>
             <Td width={'300px'} title={post_title}><a href='#'>{post_title}</a></Td>
             <Td width={'140px'}> <PostUser nickName={user_nickname} isVUser={user_v > 0} /> </Td>
-            <Td width={'120px'}>{this.dateFormat('MM-dd hh:mm', post_publish_time)}</Td>
-            <Td width={'140px'}>{this.dateFormat('MM-dd hh:mm', post_last_time)}</Td>
+            <Td width={'120px'}>{dateUtil.dateFormat('MM-dd hh:mm', post_publish_time)}</Td>
+            <Td width={'140px'}>{dateUtil.dateFormat('MM-dd hh:mm', post_last_time)}</Td>
         </Tr>
     }
 
@@ -152,7 +136,7 @@ class ArticleNewList extends Component {
     inputKeyPress = e => {
         if (e.nativeEvent.keyCode === 13) { //e.nativeEvent获取原生的事件对像
             const code = this.codeInput.value;
-            this.setState({ pageCount: 0, pageIdx: 0, code });
+            this.setState({ pageCount: 0, pageIdx: 0, code,isLoading:true });
             const { sort, pageSize } = this.state;
             const { dispatch } = this.props;
             dispatch(commentActions.loadPostList(code, sort, 1, pageSize));
@@ -161,6 +145,7 @@ class ArticleNewList extends Component {
 
     render() {
         console.log('render post list');
+        const {isLoading}=this.state;
         const { articleNewListData, page, articleNewListPageIdx } = this.props;
         if (page !== Pages.POST) {
             return <React.Fragment />
@@ -181,8 +166,9 @@ class ArticleNewList extends Component {
                 <div />
             </ListHeaderDiv>
             {rc === 0 && <InfoDiv> {`加载贴子列表失败：${me}`} </InfoDiv>}
-            {rc === 1 && this.renderList({ re })}
-            {count > 0 && <PageNavigator style={{ width: 200 }} pageSize={this.state.pageSize} pageIdx={articleNewListPageIdx} pageCount={this.state.pageCount} onNavigate={this.handleNavigatePage} />}
+            {isLoading===false && rc === 1 && this.renderList({ re })}
+            {isLoading===true && <InfoDiv> {'正在加载中，请稍候...'} </InfoDiv>}
+            { count > 0 && <PageNavigator style={{ width: 200 }} pageSize={this.state.pageSize} pageIdx={articleNewListPageIdx} pageCount={this.state.pageCount} onNavigate={this.handleNavigatePage} />}
         </Div>
     }
 }
