@@ -84,15 +84,15 @@ export const PageNavigator = ({ pageIdx = 0, pageCount = 0, pageSize = 0, onNavi
             <Input inputStyle={style} onNavigate={onNavigate} onSubmit={handleNavigate} value={pageIdx} />
             {`/ ${pageCount} 页`}
         </InputDiv>
-        <SelectDiv>
-            <Select onChange={handleSelect} ref={el => pageSizeSelect = el} value={pageSize}>
-                <option value="5">5条/页</option>
-                <option value="10">10条/页</option>
-                <option value="20">20条/页</option>
-                <option value="50">50条/页</option>
-                <option value="100">100条/页</option>
-            </Select>
-        </SelectDiv>
+
+        <Select onChange={handleSelect} ref={el => pageSizeSelect = el} value={pageSize}>
+            <option value="5">5条/页</option>
+            <option value="10">10条/页</option>
+            <option value="20">20条/页</option>
+            <option value="50">50条/页</option>
+            <option value="100">100条/页</option>
+        </Select>
+
 
         <Button disabled={pageIdx <= 1} onClick={handlePreviousClick} >{'上一页'}</Button>
         <Button disabled={pageIdx >= pageCount} onClick={handleNextClick} >{'下一页'}</Button>

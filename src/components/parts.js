@@ -17,6 +17,8 @@ export const Img = styled.img`
 export const ClickImg = styled(Img)`
     opacity:0.6;
  
+    height:${props=>props.height?props.height:'auto'};
+    width:${props=>props.width?props.height:'auto'};
     &:hover{
         opacity:1;
     }
@@ -38,26 +40,32 @@ export const ButtonDiv = styled.div`
     &:active{
         background:	#F5F5F5;
     }
-    width :${props=>props.width?props.width:'auto'};
+    width :${props => props.width ? props.width : 'auto'};
 `
 
-export const PostIdInput=styled.input`
+export const PostIdInput = styled.input`
     width:200px;
     height:24px;
     padding:2px 6px;
      
 `
 
-export const Span=styled.span`
-    text-align:${props=>props.position?props.position:'center' };
-    margin:${props=>props.margin?props.margin:'0px'};
-    color:${props=>props.color?props.color:'black'};
-    font-size:${props=>props.fontSize?props.fontSize:'12px'};
-    padding:${props=>props.padding?props.padding:'0px'};
-    background:${props=>props.background?props.background:'transparent'};
+export const Span = styled.span`
+    text-align:${props => props.position ? props.position : 'center'};
+    margin:${props => props.margin ? props.margin : '0px'};
+    color:${props => props.color ? props.color : 'black'};
+    font-size:${props => props.fontSize ? props.fontSize : '12px'};
+    padding:${props => props.padding ? props.padding : '0px'};
+    background:${props => props.background ? props.background : 'transparent'};
 `
 
-export const Linker=styled.a`
+export const Linker = styled.a`
     text-decoration:none; 
-    font-size:${props=>props.fontSize?props.fontSize:'12'};
+    font-size:${props => props.fontSize ? props.fontSize : '12'};
+`
+
+export const Div = styled.div`
+    padding:${props=>props.padding?props.padding:'0px'};
+    margin:${props=>props.margin?props.margin:'0px'};
+    background:${props=>props.background?props.background:'transparent'};
 `

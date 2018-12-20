@@ -138,6 +138,9 @@ const likeImgSrc = require('../assets/imgs/like.png')
 const LikeDiv = styled.div`
     display:flex;
     color:gray;
+    font-size:12px;
+    align-items:center;
+    justify-content:center;
 `
 /**
  * 点赞标记
@@ -148,7 +151,7 @@ export const withLikeTag = WrapperUser => props => {
     return <React.Fragment>
         <WrapperUser {...props} />
         <LikeDiv>
-            <ClickImg src={likeImgSrc} />
+            <ClickImg src={likeImgSrc} width={'14px'} height={'14px'}/>
             {reply_like_count}
         </LikeDiv>
     </React.Fragment>

@@ -3,7 +3,7 @@ import { commentActions } from '../actions'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
 import { ColumnFlexDiv, PostIdInput } from './parts'
-import { Reply } from './Reply'
+import { Comment } from './Reply'
 import { ReplyList } from './ReplyList'
 import { withScroll , PageNavigator} from '../controls'
 import { Pages } from '../constants';
@@ -111,7 +111,7 @@ class CommentList extends Component {
                 <div onClick={this.sortComments} style={{ color: '#4169E1', cursor: 'pointer' }}>{sortType === -1 ? '智能排序' : '时间排序'}</div>
             </ListHeaderDiv>
             {isLoading===false && rc === 1 && <ReplyListContainer>
-                {comments && comments.map(x => <Reply key={x.reply_id} {...x} replyPageSize={replyPageSize} postId={postId} dispatch={dispatch}/>)}
+                {comments && comments.map(x => <Comment key={x.reply_id} {...x} replyPageSize={replyPageSize} postId={postId} dispatch={dispatch}/>)}
             </ReplyListContainer>}
             {isLoading===true && <InfoDiv> {'正在加载中，请稍候...'} </InfoDiv>}
             {isLoading===false && rc === 0 && <InfoDiv> {`加载评论消息失败：${me}`} </InfoDiv>}

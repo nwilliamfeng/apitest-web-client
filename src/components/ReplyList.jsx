@@ -3,7 +3,8 @@ import { commentActions } from '../actions'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
 import { ColumnFlexDiv, ClickImg, Img } from './parts'
-import { Reply, IdentifyComment } from './Reply'
+import { Reply } from './Reply'
+import {IdentifyComment} from './IdentifyComment'
 import { withScroll, PageNavigator } from '../controls'
 import { Pages } from '../constants';
 
