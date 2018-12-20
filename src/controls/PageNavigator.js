@@ -2,13 +2,15 @@ import React from 'react'
 import styled from 'styled-components'
 import { Input } from './Input'
 
-const Select=styled.select`
+const Select = styled.select`
     outline:none;
     border:none;
-    width:72px;  
+    width:72px;   
     text-align-last:right;
-    padding:3px 2px;
-  
+`
+const SelectDiv = styled.div`
+    padding-top:2px;
+    height:24px;
 `
 
 const ColumnFlexDiv = styled.div`
@@ -39,36 +41,31 @@ const ContainerDiv = styled(ColumnFlexDiv)`
     background: '#F5F5F5';
     font-size: 12px;
     justify-content:center;
-  
 `
-
 const InputDiv = styled(ColumnFlexDiv)`
     background:  white;
     align-items:center;
-    width: 70px;
-    
+    width: 70px; 
 `
-
-export const PageNavigator = ({ pageIdx = 0, pageCount = 0,pageSize=0, onNavigate }) => {
+export const PageNavigator = ({ pageIdx = 0, pageCount = 0, pageSize = 0, onNavigate }) => {
 
     let pageSizeSelect;
 
     const handleNavigate = idx => {
         if (onNavigate != null) {
-            onNavigate(idx,pageSizeSelect.value);
+            onNavigate(idx, pageSizeSelect.value);
         }
     }
 
-
     const handlePreviousClick = () => {
         if (pageIdx > 1) {
-            handleNavigate(pageIdx - 1,pageSizeSelect.value);
+            handleNavigate(pageIdx - 1, pageSizeSelect.value);
         }
     }
 
     const handleNextClick = () => {
         if (pageIdx < pageCount) {
-            handleNavigate(pageIdx + 1,pageSizeSelect.value);
+            handleNavigate(pageIdx + 1, pageSizeSelect.value);
         }
     }
     const style = {
@@ -77,26 +74,26 @@ export const PageNavigator = ({ pageIdx = 0, pageCount = 0,pageSize=0, onNavigat
         textAlign: 'center',
     }
 
-  
-
-    const handleSelect=e=>{
-        handleNavigate(1,pageSizeSelect.value);
+    const handleSelect = e => {
+        handleNavigate(1, pageSizeSelect.value);
     }
 
-    
 
     return <ContainerDiv>
         <InputDiv>
             <Input inputStyle={style} onNavigate={onNavigate} onSubmit={handleNavigate} value={pageIdx} />
             {`/ ${pageCount} 页`}
         </InputDiv>
-        <Select onChange={handleSelect} ref={el=>pageSizeSelect=el} value={pageSize}>
-            <option value="5">5条/页</option>
-            <option value="10">10条/页</option>
-            <option value="20">20条/页</option>
-            <option value="50">50条/页</option>
-            <option value="100">100条/页</option>
-        </Select>
+        <SelectDiv>
+            <Select onChange={handleSelect} ref={el => pageSizeSelect = el} value={pageSize}>
+                <option value="5">5条/页</option>
+                <option value="10">10条/页</option>
+                <option value="20">20条/页</option>
+                <option value="50">50条/页</option>
+                <option value="100">100条/页</option>
+            </Select>
+        </SelectDiv>
+
         <Button disabled={pageIdx <= 1} onClick={handlePreviousClick} >{'上一页'}</Button>
         <Button disabled={pageIdx >= pageCount} onClick={handleNextClick} >{'下一页'}</Button>
     </ContainerDiv>

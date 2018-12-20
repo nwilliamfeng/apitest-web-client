@@ -5,7 +5,7 @@ import styled from 'styled-components'
 import {  PostIdInput } from './parts'
 import { withScroll, PageNavigator } from '../controls'
 import { Pages } from '../constants';
-import { User, WithVTag } from './user'
+import { NickName, WithVTag } from './user'
 import {dateUtil} from '../utils'
 
 const InfoDiv = styled.div`
@@ -56,7 +56,7 @@ const Td = styled.td`
 
 const ListContainer = withScroll(props => <div {...props} style={{ width: '100%' }} />)
 
-const PostUser = WithVTag(props => <User {...props} />)
+const PostUser = WithVTag(props => <NickName {...props} />)
 
 class ArticleNewList extends Component {
 

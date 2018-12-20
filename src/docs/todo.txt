@@ -1,4 +1,4 @@
 
 评论号： 791935413 5127
-贴子号： 600625
+贴子号： 600625  _002252
 http://gbapi-test.eastmoney.com/reply/api/Reply/ArticleNewList?deviceid=a21323asdf21a32f&version=300&product=guba&plat=web&code=600625
