@@ -2,6 +2,7 @@
   "name": "apitest-web-client",
   "version": "0.1.0",
   "private": true,
+  "homepage": "http://imcpftest.eastmoney.com:9090/gubatest",
   "proxy": "https://imcpftest.eastmoney.com:2020/",
   "dependencies": {
     "bootstrap": "^3.4.0",
