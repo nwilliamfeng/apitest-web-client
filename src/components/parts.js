@@ -44,7 +44,14 @@ export const ButtonDiv = styled.div`
 `
 
 export const PostIdInput = styled.input`
-    width:200px;
+    width:150px;
+    height:24px;
+    padding:2px 6px;
+     
+`
+
+export const Input = styled.input`
+    width:150px;
     height:24px;
     padding:2px 6px;
      

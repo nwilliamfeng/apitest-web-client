@@ -12,6 +12,7 @@ const defaultState = {
     replyPageSize:5,
 
     postId:null,
+    searchType:null,
     replyId:null,
     articleNewListData:{rc:1,count:0,me:''},
     articleNewListPageIdx:0,
@@ -27,6 +28,7 @@ export const commentReducer = (state = defaultState, action) => {
                 replyPage:action.page,
                 replyPageSize:action.pageSize,
                 postId:action.postId,
+                searchType:action.searchType,
                 replyId:action.replyId,
             }
         case commentConstants.LOAD_COMMENTS:
@@ -35,7 +37,7 @@ export const commentReducer = (state = defaultState, action) => {
                  
                 commentData: action.commentData,
                 commentPage:action.page,
-              
+                searchType:action.searchType,
                 postId:action.postId,
             }
 

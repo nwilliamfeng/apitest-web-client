@@ -79,17 +79,17 @@ class ReplyList extends Component {
 
     handleNavigatePage = (pageIdx, size) => {
         const { sort } = this.state;
-        const { postId, replyId } = this.props;
+        const { postId, replyId ,searchType} = this.props;
         this.setState({ isLoading: true });
-        this.props.dispatch(commentActions.loadReplyList(postId, replyId, sort, pageIdx, size));
+        this.props.dispatch(commentActions.loadReplyList(postId, replyId,searchType, sort, pageIdx, size));
     }
 
     sortComments = () => {
-        const { replyPageSize, replyPage, postId, replyId } = this.props;
+        const { replyPageSize, replyPage, postId, replyId ,searchType} = this.props;
         const { sort } = this.state;
         const nwSortType = sort === -1 ? 1 : -1;
         this.setState({ sort: nwSortType, isLoading: true });
-        this.props.dispatch(commentActions.loadReplyList(postId, replyId, nwSortType, replyPage, replyPageSize));
+        this.props.dispatch(commentActions.loadReplyList(postId, replyId,searchType, nwSortType, replyPage, replyPageSize));
     }
 
     renderReplys = ({ re }) => {
@@ -135,8 +135,8 @@ class ReplyList extends Component {
 }
 
 function mapStateToProps(state) {
-    const { replyData, replyPage, replyPageSize, postId, replyId } = state.comment;
-    return { replyData, replyPage, replyPageSize, postId, replyId };
+    // const { replyData, replyPage, replyPageSize, postId, replyId } = state.comment;
+    return { ...state.comment };
 }
 
 

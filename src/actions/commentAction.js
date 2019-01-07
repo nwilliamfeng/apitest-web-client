@@ -21,20 +21,20 @@ function loadPostList(code,sort=-1,page=1,pageSize=20){
     }
 }
 
-function loadReplyList(postId,replyId,sortType=-1,page=1,pageSize=20){
+function loadReplyList(postId,replyId,searchType,sortType=-1,page=1,pageSize=20){
     return async dispatch=>{
         dispatch({type:commentConstants.DIRECT_PAGE,page:Pages.REPLY});
-        const replyData =await commentApi.getReplys(postId,replyId,sortType,page,pageSize);
+        const replyData =await commentApi.getReplys(postId,searchType,replyId,sortType,page,pageSize);
         
-        dispatch({type:commentConstants.LOAD_REPLYS,replyData,postId,replyId,page,pageSize,sortType});
+        dispatch({type:commentConstants.LOAD_REPLYS,replyData,postId,searchType,replyId,page,pageSize,sortType});
     }
 }
 
-function loadCommentList(postId, sortType=-1,page=1,pageSize=20){
+function loadCommentList(postId,searchType, sortType=-1,page=1,pageSize=20){
     return async dispatch=>{
-        const commentData =await commentApi.getComments(postId,sortType,page,pageSize);
+        const commentData =await commentApi.getComments(postId,searchType,sortType,page,pageSize);
         
-        dispatch({type:commentConstants.LOAD_COMMENTS,commentData,sortType,page,pageSize,postId});
+        dispatch({type:commentConstants.LOAD_COMMENTS,commentData,sortType,searchType,page,pageSize,postId});
     }
 }
 

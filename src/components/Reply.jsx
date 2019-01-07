@@ -60,8 +60,8 @@ export const Reply=withMessage(props=><Div {...props}/>)
 
 export const Comment=withMessage(props=>{
     const handleClick = () => {
-        const { reply_id, dispatch, replyPageSize, postId } = props;
-        dispatch(commentActions.loadReplyList(postId, reply_id, -1, 1, replyPageSize));
+        const { reply_id, dispatch, replyPageSize, postId,searchType } = props;
+        dispatch(commentActions.loadReplyList(postId, reply_id,searchType, -1, 1, replyPageSize));
     }
 
     const {  reply_id,  child_replys, reply_count } = props;
